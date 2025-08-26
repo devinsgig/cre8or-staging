@@ -1,0 +1,33 @@
+# Laravel
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+.env
+.phpunit.result.cache
+
+# Laravel specific
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+/.phpunit.cache
+/.DS_Store
+Thumbs.db
+
+# Compiled files
+/bootstrap/cache/*.php
+
+# Logs
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Cache & sessions
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/framework/cache/.gitkeep
+!/storage/framework/sessions/.gitkeep
+!/storage/framework/views/.gitkeep

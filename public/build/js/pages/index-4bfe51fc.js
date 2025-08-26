@@ -1,0 +1,1 @@
+import{_ as t,X as e,r as s,o as n,c,d as a}from"../../assets/app-8df99815.js";const i={components:{NotificationsList:e}},r={class:"main-content-section bg-white p-5 rounded-none mb-base-2 md:rounded-base-lg dark:bg-slate-800"};function d(_,p,m,f,l,u){const o=s("NotificationsList");return n(),c("div",r,[a(o)])}const x=t(i,[["render",d]]);export{x as default};

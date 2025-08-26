@@ -1,0 +1,35 @@
+/*Header Mobile */
+.header-mobile{
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.02), 0px 2px 4px rgba(0, 0, 0, 0.08);
+}
+@media(max-width: 1025px){
+    .global-search-header-mobile{
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1001;
+        padding: 50px 20px 20px;
+        background-color: #fff;
+        .global-search-header{
+            max-width: 100%;
+        }
+        #closeMobileSearchBtn{
+            position: absolute;
+            top: 14px;
+            [dir="ltr"] & {
+                right: 18px;
+            }
+            [dir="rtl"] & {
+                left: 18px;
+            }
+        }
+    }
+}
+/* Global Search */
+body.documentScrolling{
+    .main-header{
+        border-bottom: 1px solid rgba(242, 242, 242, 1);
+    }
+}

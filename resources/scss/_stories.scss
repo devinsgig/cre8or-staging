@@ -1,0 +1,25 @@
+
+.stories-list-scroll{
+	overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior: contain auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+   
+.backgrounds-list-item{
+    flex: 0 0 2.5rem;
+    img{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-user-drag: none;
+        user-drag: none;
+        -webkit-touch-callout: none;
+        margin: auto;
+    }
+}

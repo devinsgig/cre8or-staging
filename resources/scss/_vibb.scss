@@ -1,0 +1,13 @@
+.vibb-container {
+    display: flex;
+    flex-direction: column;
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 0;
+    transition: all 0.45s linear;
+    scroll-behavior: smooth;
+}
+.vibb-container .vibb-wrapper {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    transition: all 0.45s linear;
+}
