@@ -1,12 +1,14 @@
-# Laravel
+# --- Laravel / PHP ---
 /vendor/
 /node_modules/
+/public/hot
 /public/storage
 /storage/*.key
-.env
-.phpunit.result.cache
+/.env
+/.phpunit.result.cache
+composer.phar
 
-# Laravel specific
+# --- Laravel specific ---
 Homestead.json
 Homestead.yaml
 npm-debug.log
@@ -17,17 +19,32 @@ yarn-error.log
 /.DS_Store
 Thumbs.db
 
-# Compiled files
+# --- Compiled files ---
 /bootstrap/cache/*.php
 
-# Logs
+# --- Logs ---
 /storage/logs/*
-!/storage/logs/.gitkeep
+!/storage/logs/.gitignore
 
-# Cache & sessions
+# --- Cache & sessions ---
 /storage/framework/cache/*
+!/storage/framework/cache/.gitignore
 /storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
 /storage/framework/views/*
-!/storage/framework/cache/.gitkeep
-!/storage/framework/sessions/.gitkeep
-!/storage/framework/views/.gitkeep
+!/storage/framework/views/.gitignore
+
+# --- App storage (keep folder, ignore contents) ---
+/storage/app/*
+!/storage/app/.gitignore
+
+# --- Certs / secrets (don’t commit) ---
+/storage/certs/*
+!/storage/certs/.gitignore
+
+# editor junk
+/.idea/
+/.vscode/
+*.log
+npm-debug.log*
+yarn-error.log*
