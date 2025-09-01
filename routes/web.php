@@ -4,17 +4,16 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
-| TEMP: make the SPA boot no matter what by answering any /api/* call.
-| We'll see exactly which endpoints it wants in the logs, then wire
-| the real controllers after it loads.
+| TEMP: Ensure all SPA boot APIs exist (incl. Sanctum CSRF cookie)
 |--------------------------------------------------------------------------
 */
 
 Route::prefix('api')->group(function () {
-    // Known essentials
+    // App config
     Route::get('/app', function () {
         $appUrl   = rtrim(config('app.url') ?: url('/'), '/');
         $assetUrl = rtrim(config('app.asset_url') ?: $appUrl, '/');
@@ -28,7 +27,11 @@ Route::prefix('api')->group(function () {
         ]);
     });
     Route::get('/v1/app', fn () => redirect('/api/app'));
+
+    // Init endpoint expected by SPA
     Route::get('/init', fn () => response()->json(['ok' => true]));
+
+    // Current user endpoint (guest-safe)
     Route::get('/user/me', function () {
         $u = Auth::user();
         return response()->json([
@@ -41,21 +44,29 @@ Route::prefix('api')->group(function () {
         ]);
     });
 
-    // TEMP: return 200 for ANY other /api/* request and log it
+    // TEMP: 200 for any other /api/* (log once)
     Route::any('/{any}', function (Request $req, string $any) {
         Log::info('API Fallback', [
             'method' => $req->method(),
             'path'   => '/api/' . $any,
             'query'  => $req->query(),
         ]);
-
-        // Minimal sane default shape so frontend won’t crash
         return response()->json([
             'ok'      => true,
             'path'    => '/api/' . $any,
             'message' => 'temporary fallback',
         ]);
     })->where('any', '.*');
+});
+
+// Sanctum CSRF cookie (some builds request this before calling /api/*)
+Route::get('/sanctum/csrf-cookie', function () {
+    $token = Str::random(40);
+    $domain = config('session.domain') ?: parse_url(config('app.url') ?: url('/'), PHP_URL_HOST);
+    // 2 hours, Secure+SameSite=Lax
+    return response()->json(['ok' => true])->withCookie(
+        cookie(name: 'XSRF-TOKEN', value: $token, minutes: 120, path: '/', domain: $domain, secure: true, httpOnly: false, raw: false, sameSite: 'lax')
+    );
 });
 
 /*
