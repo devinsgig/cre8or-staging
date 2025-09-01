@@ -1,23 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-| We expose the SPA frontend and required API fallbacks.
+| TEMP: make the SPA boot no matter what by answering any /api/* call.
+| We'll see exactly which endpoints it wants in the logs, then wire
+| the real controllers after it loads.
 |--------------------------------------------------------------------------
 */
 
-// --- API endpoints required by the SPA ---
 Route::prefix('api')->group(function () {
-    // Health
-    Route::get('/app-ping', fn () => response()->json(['ok' => true, 'ts' => now()->toIso8601String()]));
-
-    // App config
+    // Known essentials
     Route::get('/app', function () {
         $appUrl   = rtrim(config('app.url') ?: url('/'), '/');
         $assetUrl = rtrim(config('app.asset_url') ?: $appUrl, '/');
@@ -31,28 +28,41 @@ Route::prefix('api')->group(function () {
         ]);
     });
     Route::get('/v1/app', fn () => redirect('/api/app'));
-
-    // Init endpoint expected by SPA
     Route::get('/init', fn () => response()->json(['ok' => true]));
-
-    // Current user endpoint
     Route::get('/user/me', function () {
         $u = Auth::user();
-        if (!$u) {
-            return response()->json(['user' => null, 'auth' => false]);
-        }
         return response()->json([
-            'user' => [
+            'user' => $u ? [
                 'id'    => $u->id,
                 'name'  => $u->name ?? ($u->username ?? null),
                 'email' => $u->email ?? null,
-            ],
-            'auth' => true,
+            ] : null,
+            'auth' => (bool) $u,
         ]);
     });
+
+    // TEMP: return 200 for ANY other /api/* request and log it
+    Route::any('/{any}', function (Request $req, string $any) {
+        Log::info('API Fallback', [
+            'method' => $req->method(),
+            'path'   => '/api/' . $any,
+            'query'  => $req->query(),
+        ]);
+
+        // Minimal sane default shape so frontend won’t crash
+        return response()->json([
+            'ok'      => true,
+            'path'    => '/api/' . $any,
+            'message' => 'temporary fallback',
+        ]);
+    })->where('any', '.*');
 });
 
-// --- SPA catch-all (must exclude /api/*) ---
+/*
+|--------------------------------------------------------------------------
+| SPA catch-all (exclude /api/*)
+|--------------------------------------------------------------------------
+*/
 Route::get('/{any}', function () {
     return view('shaun_core::app');
 })->where('any', '^(?!api).*$');
